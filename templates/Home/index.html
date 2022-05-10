@@ -1,0 +1,92 @@
+  <!-- Write HTML code here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TableView - Startup</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+<h2 class="text-center"><u>Interview Details</u></h2><br>			
+<table class="table table-dark table-striped">
+	<thead>
+	<tr>
+		<th>No.</th>
+		<th>Name</th>
+		<th>Time</th>
+		<th>Date</th>
+		<th>Mo. Number</th>
+		<th>Status</th>
+	</tr>
+	</thead>
+	<tbody>
+
+	<!-- jinja2 Technique -->
+	{% if employee %}
+	{% for i in employee %}
+	<tr>
+		<td>{{forloop.counter}}</td>
+		<td>{{i.name}}</td>
+		<td>{{i.time}}</td>
+		<td>{{i.Date}}</td>
+		<td>{{i.MobileNumber}}</td>
+		<td>
+			{% if i.status == 'In progress' %}
+				<span style="color: yellow">{{ i.status }}</span></p> 
+			{% elif i.status == 'Complete' %}
+				<span style="color: LightGreen">{{ i.status }}</span></p> 
+			{% else %}
+				<span style="color: red">{{ i.status }}</span></p>
+			{% endif %}
+			
+		</td>
+	</tr>
+	{% endfor %}
+	
+	<ul class="pagination justify-content-center">
+		{% if employee.has_previous %}
+			<li><a  href="?page={{ employee.previous_page_number }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+		{% else %}
+			<li class="disabled" ><span><i class="fa fa-chevron-left" aria-hidden="true"></i></span></li>
+		{% endif %}
+		
+		{% if employee.number|add:'-4' > 1 %}
+			<li><a class="page-link" href="?page={{ employee.number|add:'-5' }}">&hellip;</a></li>
+		{% endif %}
+		
+		{% for i in employee.paginator.page_range %}
+			{% if employee.number == i %}
+			<li class="page-item active">
+				<span class="page-link">
+					{{ i }} 
+				  <span class="sr-only">(current)</span>
+				</span>
+			  </li>
+			{% elif i > employee.number|add:'-5' and i < employee.number|add:'5' %}
+				<li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+			{% endif %}
+		{% endfor %}
+		
+		{% if employee.paginator.num_pages > employee.number|add:'4' %}
+			<li><a class="page-link" href="?page={{ employee.number|add:'5' }}">&hellip;</a></li>
+		{% endif %}
+		
+		{% if employee.has_next %}
+			<li><a href="?page={{ employee.next_page_number }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+		{% else %}
+			<li class="disabled" ><span><i  class="fa fa-chevron-right" aria-hidden="true"></i></span></li>
+		{% endif %}
+	</ul>
+	
+	{% endif %}
+	</tbody>
+</table>
+</div>
+
+</body>
+</html>
